@@ -79,6 +79,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "@neon/config": "^1.9.2",
+    "@neon/env": "^1.6.3",
     "commander": "^14.0.2",
     "express": "^5.2.1",
     "jose": "^6.2.3",

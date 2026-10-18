@@ -1,7 +1,7 @@
 import pg from "pg";
 import { POSTGRES_MIGRATIONS, runPostgresMigrations } from "./migrations.js";
 
-const databaseUrl = process.env.DATABASE_URL ?? process.env.POSTGRES_SMOKE_DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL ?? process.env.POSTGRES_SMOKE_DATABASE_URL;
 
 if (!databaseUrl) {
   console.error("DATABASE_URL is required to run Vault MCP Postgres migrations.");
