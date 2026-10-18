@@ -11,3 +11,4 @@ coverage/
 *.tsbuildinfo
 .env*
 .vercel
+.neon

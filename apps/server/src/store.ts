@@ -464,15 +464,28 @@ export class JsonIndexStore implements IndexStore {
 
 export class PostgresIndexStore implements IndexStore {
   private readonly pool: pg.Pool;
+  private readonly migrationDatabaseUrl: string | null;
   private generatedAt: string | null = null;
   private stats: IndexStats | null = null;
 
-  constructor(databaseUrl: string) {
+  constructor(databaseUrl: string, migrationDatabaseUrl?: string) {
     this.pool = new pg.Pool({ connectionString: databaseUrl });
+    this.migrationDatabaseUrl = migrationDatabaseUrl && migrationDatabaseUrl !== databaseUrl
+      ? migrationDatabaseUrl
+      : null;
   }
 
   async load(): Promise<void> {
-    await runPostgresMigrations(this.pool);
+    if (this.migrationDatabaseUrl) {
+      const migrationPool = new pg.Pool({ connectionString: this.migrationDatabaseUrl });
+      try {
+        await runPostgresMigrations(migrationPool);
+      } finally {
+        await migrationPool.end();
+      }
+    } else {
+      await runPostgresMigrations(this.pool);
+    }
 
     const meta = await this.pool.query<{ key: string; value: unknown }>("select key, value from vault_index_meta");
     for (const row of meta.rows) {

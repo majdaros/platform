@@ -5,7 +5,7 @@ import { createApp } from "./app.js";
 export async function createConfiguredApp(env = process.env) {
   const config = loadConfig(env);
   const store: IndexStore = config.databaseUrl
-    ? new PostgresIndexStore(config.databaseUrl)
+    ? new PostgresIndexStore(config.databaseUrl, env.DATABASE_URL_UNPOOLED)
     : new JsonIndexStore(config.indexFile);
   await store.load?.();
 
